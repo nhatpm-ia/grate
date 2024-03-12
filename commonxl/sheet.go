@@ -75,12 +75,13 @@ func (s *Sheet) Put(row, col int, value interface{}, fmtNum uint16) {
 		}
 	}
 
-	ct, ok := s.Formatter.getCellType(fmtNum)
-	if !ok || fmtNum == 0 {
-		s.Rows[row][col] = NewCell(value)
-	} else {
-		s.Rows[row][col] = NewCellWithType(value, ct, s.Formatter)
-	}
+	//ct, ok := s.Formatter.getCellType(fmtNum)
+	//if !ok || fmtNum == 0 {
+	//	s.Rows[row][col] = NewCell(value)
+	//} else {
+	//	s.Rows[row][col] = NewCellWithType(value, ct, s.Formatter)
+	//}
+	s.Rows[row][col] = NewCell(value)
 	s.Rows[row][col].SetFormatNumber(fmtNum)
 }
 
