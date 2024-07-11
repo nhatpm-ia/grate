@@ -14,6 +14,7 @@ type Sheet struct {
 	NumRows   int
 	NumCols   int
 	Rows      [][]Cell
+	Address   [][]string
 
 	CurRow int
 }
@@ -30,6 +31,7 @@ func (s *Sheet) Resize(rows, cols int) {
 			continue
 		}
 		s.Rows[i] = append(s.Rows[i], make([]Cell, n)...)
+		s.Address[i] = append(s.Address[i], make([]string, n)...)
 	}
 
 	if rows <= 0 {
@@ -44,6 +46,7 @@ func (s *Sheet) Resize(rows, cols int) {
 
 	for rows >= len(s.Rows) {
 		s.Rows = append(s.Rows, make([]Cell, cols))
+		s.Address = append(s.Address, make([]string, cols))
 	}
 }
 
@@ -174,7 +177,9 @@ func (s *Sheet) Formats() []string {
 
 // Scan extracts values from the current record into the provided arguments
 // Arguments must be pointers to one of 5 supported types:
-//     bool, int64, float64, string, or time.Time
+//
+//	bool, int64, float64, string, or time.Time
+//
 // If invalid, returns ErrInvalidScanType
 func (s *Sheet) Scan(args ...interface{}) error {
 	row := s.Rows[s.CurRow-1]

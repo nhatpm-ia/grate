@@ -100,6 +100,9 @@ func (s *Sheet) parseSheet() error {
 					log.Println("CELL UNKNOWN", val, currentCellType, fno)
 				}
 				s.wrapped.Put(r, c, val, fno)
+				if s.wrapped.Address[r][c] == "" {
+					s.wrapped.Address[r][c] = currentCell
+				}
 			} else {
 				//log.Println("FAIL row/col: ", currentCell)
 			}
@@ -151,6 +154,7 @@ func (s *Sheet) parseSheet() error {
 				if len(dims) > 1 {
 					endCol, endRow = refToIndexes(dims[1])
 				}
+				s.wrapped.Address[startRow][startCol] = ax[0]
 				if endRow > maxRow {
 					endRow = maxRow
 				}
