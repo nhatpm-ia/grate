@@ -184,10 +184,13 @@ func (d *Document) parseStyles(dec *xml.Decoder) error {
 func (d *Document) parseSharedStrings(dec *xml.Decoder) error {
 	val := ""
 	tok, err := dec.RawToken()
+	isOpenRPh := false
 	for ; err == nil; tok, err = dec.RawToken() {
 		switch v := tok.(type) {
 		case xml.CharData:
-			val += string(v)
+			if !isOpenRPh {
+				val += string(v)
+			}
 		case xml.StartElement:
 			switch v.Name.Local {
 			case "si":
@@ -195,7 +198,10 @@ func (d *Document) parseSharedStrings(dec *xml.Decoder) error {
 			case "t":
 				// no attributes to parse, we only want the CharData ...
 			case "sst":
-				// main container
+			// main container
+			case "rPh":
+				isOpenRPh = true
+				continue
 			default:
 				if grate.Debug {
 					log.Println("  Unhandled SST xml tag", v.Name.Local, v.Attr)
@@ -205,6 +211,9 @@ func (d *Document) parseSharedStrings(dec *xml.Decoder) error {
 			if v.Name.Local == "si" {
 				d.strings = append(d.strings, val)
 				continue
+			}
+			if v.Name.Local == "rPh" {
+				isOpenRPh = false
 			}
 		default:
 			if grate.Debug {
