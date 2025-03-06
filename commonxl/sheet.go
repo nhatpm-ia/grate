@@ -137,7 +137,7 @@ func (s *Sheet) Strings() []string {
 			res[i] = ""
 			continue
 		}
-		if cell.Type() == StaticCell {
+		if cell.Type() == StaticCell || cell.Type() == StringCell {
 			res[i] = cell.Value().(string)
 			continue
 		}
